@@ -13,8 +13,15 @@ dt-launchfile-init
 # NOTE: Use `dt-exec COMMAND` to run the main process (blocking process)
 
 # launching app
-dt-exec echo "This is an empty launch script. Update it to launch your application."
+dt-exec echo "Setting up display..."
+dt-exec Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset 
+export DISPLAY=:1
+dt-exec echo "Done."
 
+dt-exec echo "[Launcher]: Running dt_simulator-ros-wrapper..."
+#dt-exec rosrun dt_simulator-ros-wrapper dt_simulator_ros_wrapper_node.py
+dt-exec roslaunch dt_simulator-ros-wrapper run_dt_simulator_ros_wrapper_node.launch
+dt-exec echo "[Launcher]: ... Done."
 
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE

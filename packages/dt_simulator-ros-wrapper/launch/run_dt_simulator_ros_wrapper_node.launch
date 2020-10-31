@@ -1,0 +1,5 @@
+<launch>
+
+	<node pkg="dt_simulator-ros-wrapper" type="dt_simulator_ros_wrapper_node.py" name="dt_simulator_ros_wrapper_node" output="screen"/>
+
+</launch>

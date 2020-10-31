@@ -1,0 +1,11 @@
+<package>
+  <name>dt_simulator-ros-wrapper</name>
+  <version>0.1.0</version>
+  <description>
+  This package is a ROS wrapper that wraps the duckietown simulator and connects it to the duckietown ROS network.
+  </description>
+  <maintainer email="ebnerl@ethz.ch">Luca Ebner</maintainer>
+  <license>None</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
