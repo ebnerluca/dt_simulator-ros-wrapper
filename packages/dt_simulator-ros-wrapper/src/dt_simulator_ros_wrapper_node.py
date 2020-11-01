@@ -4,9 +4,10 @@ import os
 import rospy
 from duckietown.dtros import DTROS, NodeType
 from std_msgs.msg import String
-#from duckietown_msgs.msg import SegmentList, Segment, BoolStamped
+from sensor_msgs.msg import CompressedImage
+from duckietown_msgs.msg import WheelsCmdStamped
 import gym_duckietown
-#from gym_duckietown.simulator import Simulator
+from gym_duckietown.simulator import Simulator
 
 class DTSimulatorRosWrapper(DTROS):
 
@@ -23,17 +24,17 @@ class DTSimulatorRosWrapper(DTROS):
         rospy.loginfo("[DTSimulatorRosWrapper]:    vehicleName_: %s" %vehicleName_)
 
         #construct publisher
-        imageTopic = vehicleName_ + "/imageTopic" #TODO
-        self.imagePublisher_ = rospy.Publisher(imageTopic, String, queue_size=10) #TODO: adjust message type, adjust topic
+        imageTopic = vehicleName_ + "/camera_node/image/compressed" #TODO
+        self.imagePublisher_ = rospy.Publisher(imageTopic, CompressedImage, queue_size=10) #TODO: adjust message type, adjust topic
         rospy.loginfo("[DTSimulatorRosWrapper]:    Publishing images to: %s" %imageTopic)
 
         #construct Subscriber
-        wheelCommandsTopic = vehicleName_ + "wheelCommandsTopic"
-        self.wheelCommandsSubscriber_ = rospy.Subscriber(wheelCommandsTopic, String, self.wheelCommandsSubscriberCallback)
+        wheelCommandsTopic = vehicleName_ + "/wheels_driver_node/wheels_cmd"
+        self.wheelCommandsSubscriber_ = rospy.Subscriber(wheelCommandsTopic, WheelsCmdStamped, self.wheelCommandsSubscriberCallback)
         rospy.loginfo("[DTSimulatorRosWrapper]:    Subscribing wheel commands from: %s" %wheelCommandsTopic)
         self.wheelCommands_ = [0.1,0.1] #initialize wheelCommands
 
-        rospy.loginfo("[DTSimulatorRosWrapper]: ... done.")
+        rospy.loginfo("[DTSimulatorRosWrapper]: done.")
 
         #env = Simulator(
         #        seed=123, # random seed
@@ -56,10 +57,12 @@ class DTSimulatorRosWrapper(DTROS):
             rate.sleep()
 
     def wheelCommandsSubscriberCallback(self, data):
-        rospy.loginfo("[DTSimulatorRosWrapper]: Wheel Commands: %s", data.data)
 
         #get wheel commands
-        #self.wheelCommands_ = data #TODO
+        self.wheelCommands_[0] = data.vel_left
+        self.wheelCommands_[1] = data.vel_right
+        rospy.loginfo("[DTSimulatorRosWrapper]:received new wheel commands: ")
+        rospy.loginfo(data)
 
 
     def updateSimulator(self):
@@ -72,11 +75,12 @@ class DTSimulatorRosWrapper(DTROS):
         #    env.reset()
 
         #publish image on image topic
-        imagePlaceholder = "This should be an image."
-        self.imagePublisher_.publish(imagePlaceholder) #TODO, adjust message
-        rospy.loginfo("[DTSimulatorRosWrapper]:    Published image: %s" %imagePlaceholder)
+        imagePlaceholder = CompressedImage()
+        imagePlaceholder.header.seq = 115
+        self.imagePublisher_.publish(imagePlaceholder)
+        rospy.loginfo("[DTSimulatorRosWrapper]:    Published image.")
 
-        rospy.loginfo("[DTSimulatorRosWrapper]: ... done")
+        rospy.loginfo("[DTSimulatorRosWrapper]: done")
 
 if __name__ == '__main__':
     # create the node

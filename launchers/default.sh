@@ -19,7 +19,6 @@ export DISPLAY=:1
 dt-exec echo "Done."
 
 dt-exec echo "[Launcher]: Running dt_simulator-ros-wrapper..."
-#dt-exec rosrun dt_simulator-ros-wrapper dt_simulator_ros_wrapper_node.py
 dt-exec roslaunch dt_simulator-ros-wrapper run_dt_simulator_ros_wrapper_node.launch
 dt-exec echo "[Launcher]: ... Done."
 
