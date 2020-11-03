@@ -13,10 +13,11 @@ dt-launchfile-init
 # NOTE: Use `dt-exec COMMAND` to run the main process (blocking process)
 
 # launching app
-dt-exec echo "Setting up display..."
-dt-exec Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset 
-export DISPLAY=:1
-dt-exec echo "Done."
+dt-exec echo "[Launcher]: Setting up display..."
+#dt-exec Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset
+dt-exec Xvfb :33 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &> xvfb.log &
+export DISPLAY=:33
+dt-exec echo "[Launcher]: Done."
 
 dt-exec echo "[Launcher]: Running dt_simulator-ros-wrapper..."
 dt-exec roslaunch dt_simulator-ros-wrapper run_dt_simulator_ros_wrapper_node.launch
